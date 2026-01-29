@@ -1,116 +1,63 @@
 ﻿
 #include <iostream>
-#include <random>
-
-int generation_random(int min, int max);
-int first_gamer();
-int second_gamer();
-bool checkDifferentSigns(int a, int b);
+#include "Function.h"
 
 int main()
 {
-    int valueFirstGamerOld = first_gamer();
-    int valueSecondGamerOld = second_gamer();
-
-    int summ{ 0 };
-    int step{ 0 };
+    int valueFirstGamerOld = 0;
+    int valueSecondGamerOld = 0;
+    
+    int summ = 0;
+    int step = 0;
 
     while (true) {
 
-        int valueFirstGamerNew = first_gamer();
-        int valueSecondGamerNew = second_gamer();
+        int valueFirstGamerNew = playerRandom(0, 5);
+        int valueSecondGamerNew = playerRandom(0, 5);
 
-        if (step % 2 == 0) {     //выбор хода игрока (проверка на четность)
-
-            while (checkDifferentSigns(valueFirstGamerOld, valueFirstGamerNew)) {  //перебираем числа пока не поменяеться знак
-                valueFirstGamerNew = first_gamer();
+        // последовательное включение игроков
+        switch (step%2)
+        {
+        case 0:
+            if (checkSigns(valueFirstGamerOld, valueFirstGamerNew)) 
+            {   
+                valueFirstGamerNew *= -1;
             }
-
-            /*if (checkDifferentSigns(valueFirstGamerOld, valueFirstGamerNew)) {   //меняем знак числа
-                valueFirstGamerNew = valueFirstGamerNew * -1;
-            }*/
-
             valueFirstGamerOld = valueFirstGamerNew;
             summ += valueFirstGamerOld;
+            break;
 
-            if (summ >= 50) {      //оканчиваем игру при достижения значения общего счетчика 
-                std::cout << "The first player won!" << std::endl;
-                break;
+        default:
+            if (checkSigns(valueSecondGamerOld, valueSecondGamerNew)) 
+            {   
+                valueSecondGamerNew *= -1;
             }
-        }
-
-        else {
-            while (checkDifferentSigns(valueSecondGamerOld, valueSecondGamerNew)) {  //перебираем числа пока не поменяеться знак
-                valueSecondGamerNew = second_gamer();
-            }
-
-            /*if (checkDifferentSigns(valueSecondGamerOld, valueSecondGamerNew)) {   //меняем знак числа
-                 valueSecondGamerNew = valueSecondGamerNew * -1;
-            }*/
-
             valueSecondGamerOld = valueSecondGamerNew;
             summ += valueSecondGamerOld;
+            break;
 
-            if (summ >= 50) {  //оканчиваем игру при достижения значения общего счетчика
-                std::cout << "The second player won!" << std::endl;
-                break;
-            }
         }
 
-        if (step == 100) {     //оканчиваем игру при достижении числа ходов
-            std::cout << "The game ended in a draw!" << std::endl;
+        // проверка выигрыша и вывод победителя
+        if (checkWin(summ))
+        {
+            std::cout << "The " << (step % 2 == 0 ? "first" : "second") << " player is won!" << std::endl;
             break;
         }
 
-        /*std::cout << "step: " << step << " first: "
-            << valueFirstGamerOld << " second : " << valueSecondGamerOld
-            << " summ : " << summ << std::endl;*/
-        step += 1;
+        step++;
+
+        // проверка окончания игры
+        if (summ < WIN_SCORE && step >= WIN_STEP) {
+            std::cout << "The game ended in a draw!" << std::endl;
+            break;
+        }
+         
+        // отображение хода игры
+        std::cout << "step: " << step << " first: "
+              << valueFirstGamerOld << " second : " 
+              << valueSecondGamerOld
+              << " summ : " << summ << std::endl;
+    
     }
-}
-
-/// <summary>
-/// Генератор случайной последовательности
-/// </summary>
-/// <param name="min"> нижняя граница случайных числел </param>
-/// <param name="max"> верхняя граница случайных числел </param>
-/// <returns> выводит знанчение случайных чисел </returns>
-int generation_random(int min, int max) {
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<int> distribution(min, max);
-
-    return distribution(generator);
-}
-
-/// <summary>
-/// Функци которая генерирует случайные числа для первого игрока
-/// </summary>
-/// <returns> выводи значения чисел в промежутке от -5 до 5 </returns>
-int first_gamer() {
-    int min{ -5 };
-    int max{ 5 };
-
-    return generation_random(min, max);
-}
-
-/// <summary>
-/// Функци которая генерирует случайные числа для второго игрока
-/// </summary>
-/// <returns> выводи значения чисел в промежутке от -5 до 5 </returns>
-int second_gamer() {
-    int min{ -5 };
-    int max{ 5 };
-
-    return generation_random(min, max);
-}
-
-/// <summary>
-/// Функция которая производит сравнение числел по знаку
-/// </summary>
-/// <param name="numberOld"> новое число </param>
-/// <param name="numberNew"> старое число </param>
-/// <returns> выводит true или false, принимаем ноль за положительное число</returns>
-bool checkDifferentSigns(int numberOld, int numberNew) {
-    return ((numberOld >= 0 && numberNew >= 0) || (numberOld < 0 && numberNew < 0));
 }
