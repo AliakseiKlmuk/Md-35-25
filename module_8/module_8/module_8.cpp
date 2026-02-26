@@ -5,19 +5,19 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
 
-    Book book ("Sherlock Holmes", "Sir Arthur Conan Doyle", 2020, "9781839641756");
-    Book book2 = book;
+	Book book1;
+	book1.setTitle("Hobbit");
+	book1.setAuthor("J R. R. Tolkien");
+	book1.setYear(1986);
+	book1.setISBN("9780345339683");
+	book1.printInfo();
 
-    book.printInfo();
-    book2.printInfo();
-   
+	Book book2("Hobbit", "J R. R. Tolkien", 1986, "9780345339683");
+	book2.printInfo();
 
-    book.setTitle("Hobbit");
-    book.setAuthor("J R. R. Tolkien");
-    book.setYear(1986);
-    book.setISBN("9780345339683");
-    book.printInfo();
+	Book book3 = book1;
+	book3.printInfo();
+
 
 }

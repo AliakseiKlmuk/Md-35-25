@@ -1,23 +1,29 @@
 #include "Book.h"
 
-void Book::setTitle(const char* title)
+std::string Book::getTitle() const
 {
-	if (_title) {
-		delete[] _title;
-	}
-
-	_title = new char[strlen(title) + 1];
-	strcpy_s(_title, strlen(title) + 1, title);
+	return _title ? *_title : "No title";
 }
 
-void Book::setAuthor(const char* author)
+std::string Book::getAuthor() const
+{
+	return _author ? *_author : "No author";
+}
+
+void Book::setTitle(const std::string& title)
+{
+	if (_title) {
+		delete _title;
+	}
+	_title = new std::string(title);
+}
+
+void Book::setAuthor(const std::string& author)
 {
 	if (_author) {
-		delete[] _author;
+		delete _author;
 	}
-
-	_author = new char[strlen(author) + 1];
-	strcpy_s(_author, strlen(author) + 1, author);
+	_author = new std::string(author);
 }
 
 void Book::setYear(unsigned int year)
@@ -34,44 +40,10 @@ void Book::setISBN(const char* ISBN)
 	strcpy_s(_ISBN, strlen(ISBN) + 1, ISBN);
 }
 
-//void Book::setFormatISBN(const char* ISBN)
-//{
-//	size_t length = strlen(ISBN);
-//	size_t new_length = length + 3;
-//
-//	_ISBN = new char[new_length + 1];
-//
-//	size_t j = 0;
-//	for (size_t i = 0; i < length; ++i) {
-//		if (j == 3 || j == 5 || j == 8) {
-//			_ISBN[j] = '-';
-//			j++;
-//		}
-//		_ISBN[j] = ISBN[i];
-//		j++;
-//	}
-//
-//	_ISBN[j] = '\0';
-//}
-
 void Book::printInfo() const
 {
-	if (_title && _title[0] != '\0') {
-		std::cout << "Title:" << '\t' << getTitle() << std::endl;
-	}
-	else { std::cout << "Title:\tunknown information" << std::endl; }
-
-	if (_author && _author[0] != '\0') {
-		std::cout << "Author:" << '\t' << getAuthor() << std::endl;
-	} else { std::cout << "Author:\tunknown information" << std::endl; }
-
-	if (_year < 2026 && _year > 0) {
-		std::cout << "Year:" << '\t' << getYear() << std::endl;
-	} else { std::cout << "Year:\tunknown information" << std::endl; }
-
-	if (_ISBN && _ISBN[0] != '\0') {
-		std::cout << "ISBN:" << '\t' << getISBN() << std::endl;
-	} else { std::cout << "ISBN:\tunknown information" << std::endl; }
+	std::cout << "Title: " << getTitle() << "\tAuthor: " << getAuthor()
+		<< "\tYear: " << _year << "\tISBN: " << _ISBN;
 
 	std::cout << std::endl;
 }
