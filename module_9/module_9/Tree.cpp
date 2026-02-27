@@ -4,29 +4,30 @@
 unsigned int Tree::_countTree = 0;
 unsigned int Tree::_nextID = 1;
 
-void Tree::setType(const std::string& type)
+std::string Tree::getName() const
 {
-	_typeTree = stringToTypeTree(type);
+	return _nameTree ? *_nameTree : "No name";
+}
+
+void Tree::setType(TypeTree type)
+{
+	_typeTree = type;
 }
 
 void Tree::setName(const std::string& name)
 {
-	_nameTree = name;
+	if (_nameTree) {
+		*_nameTree = name;
+	}
+	else {
+		_nameTree = new std::string(name);
+	}
 }
 
 void Tree::wind() const {
-	std::cout << "Tree: " << _nameTree << "\tType: " << typeTreeToString(_typeTree) << "\tid: " << _idTree << std::endl;
-}
-
-TypeTree Tree::stringToTypeTree(const std::string& str)
-{
-	static const std::unordered_map<std::string, TypeTree> mapping = {
-		{"coniferous", TypeTree::Coniferous},
-		{"deciduous", TypeTree::Deciduous},
-		{"fruit", TypeTree::Fruit} };
-	auto it = mapping.find(str);
-
-	return it !=mapping.end()? it->second: TypeTree::Unknow;
+	std::cout << "Tree name: " << getName()
+		<< "\tType tree: " << typeTreeToString(_typeTree)
+		<< "\tid: " << _idTree << std::endl;
 }
 
 std::string Tree::typeTreeToString(TypeTree type) {

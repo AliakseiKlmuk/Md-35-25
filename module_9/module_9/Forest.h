@@ -8,14 +8,11 @@
 class Forest
 {
 public:  // constructor
-	Forest() 
-	{
-		//std::cout << "Forest initialized." << std::endl;
-	}
-
-public:  // functions homeWork
+	Forest() = default;
+	
+public:  // functions
+	size_t getTreesNumber() const;
 	void growUp(const Tree& tree);
-	unsigned int getTreesNumber() const;
 	void cutAll();
 	void changeID(size_t index, unsigned int newID);
 
@@ -26,10 +23,8 @@ public:  // operator
 	Forest operator+(const Forest& other) const;
 		
 public: // distructor
-	~Forest()
-	{
-		//std::cout << "distructor forest" << std::endl;
-	};
+	~Forest() = default;
+	
 
 private:
 	std::vector<Tree> _trees;

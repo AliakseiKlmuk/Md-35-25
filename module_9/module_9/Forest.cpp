@@ -5,7 +5,7 @@ void Forest::growUp(const Tree& tree)
 	_trees.push_back(tree);
 }
 
-unsigned int Forest::getTreesNumber() const
+size_t Forest::getTreesNumber() const
 {
 	return _trees.size();
 }
@@ -13,7 +13,6 @@ unsigned int Forest::getTreesNumber() const
 void Forest::cutAll()
 {
 	_trees.clear();
-	std::cout << "Delete all" << std::endl;
 }
 
 void Forest::changeID(size_t index, unsigned int newID)
@@ -40,8 +39,13 @@ Forest Forest::operator+(const Forest& other) const
 
 void Forest::displayAll() const
 {
+	if (_trees.empty()) {
+		std::cout << "No trees in the forest." << std::endl;
+	}
 	for (const auto& tree : _trees) {
 		tree.wind();
 	}
+
+	std::cout << std::endl;
 }
 
