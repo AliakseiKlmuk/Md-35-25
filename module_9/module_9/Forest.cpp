@@ -15,17 +15,6 @@ void Forest::cutAll()
 	_trees.clear();
 }
 
-void Forest::changeID(size_t index, unsigned int newID)
-{
-	if (index < _trees.size())
-	{
-		_trees[index].setID(newID);
-	}
-	else {
-		std::cout << "Index out of range." << std::endl;
-	}
-}
-
 Forest Forest::operator+(const Forest& other) const
 {
 	Forest combinedForest = *this;
@@ -45,7 +34,15 @@ void Forest::displayAll() const
 	for (const auto& tree : _trees) {
 		tree.wind();
 	}
-
-	std::cout << std::endl;
 }
 
+void changeID(Forest& forest, size_t index, unsigned int newID)
+{
+	auto size = forest._trees.size();
+	if (index < size) {
+		forest._trees[index].setID(newID); // Использование метода setID
+	}
+	else {
+		std::cout << "Index out of range." << std::endl;
+	}
+}

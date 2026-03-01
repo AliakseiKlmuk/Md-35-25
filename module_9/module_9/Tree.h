@@ -2,15 +2,16 @@
 #include <string>
 #include <iostream>
 
+enum class TypeTree {Unknown = -1, Coniferous, Deciduous, Fruit};
+
 class Forest;
-
-enum class TypeTree {Unknow = -1, Coniferous, Deciduous, Fruit};
-
 class Tree
 {
+	static unsigned int nextID;
+	
 public:  // constructors
 	Tree(const std::string& name, TypeTree type)
-		: _typeTree(type), _idTree(_nextID++)
+		: _typeTree(type), _idTree(nextID++)
 	{
 		setName(name);
 		_countTree++;
@@ -28,6 +29,9 @@ public:  // constructors
 		//std::cout << "copy constructor tree" << std::endl;
 	}
 
+public:
+	friend void changeID(Forest& forest, size_t index, unsigned int newID);
+
 public:  // getters
 	std::string getName() const;
 	unsigned int getID() const { return _idTree; };
@@ -37,13 +41,9 @@ public:  // getters
 public:  // setters
 	void setName(const std::string& name);
 	void setID(unsigned int id) { _idTree = id; };
-
-	void setType(TypeTree type);
 	
 public:  // other function
-	void wind() const; // display
-
-	static std::string typeTreeToString(TypeTree type); // modification enum
+	void wind() const; 
 
 public:  // disstructor
 	~Tree()
@@ -59,8 +59,7 @@ private:
 
 private:
 	static unsigned int _countTree;
-	static unsigned int _nextID;
 	unsigned int _idTree = 1;
-		
+	
 };
 
