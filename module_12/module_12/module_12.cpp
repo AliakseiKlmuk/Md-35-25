@@ -15,6 +15,16 @@ struct CarInfo {
 
 int main() {
 
+	int currentCarIndex = 0;
+	int currentRepaierCarIndex = 0;
+
+	int limitCarsInGarage = 5;
+
+	int countPassengerCar = 0;
+	int countCargoCar = 0;
+
+	bool work = true;
+
 	Garage garage;
 	ServiceStation serviceStation(garage);
 
@@ -37,46 +47,37 @@ int main() {
 		{"Toyota Tacoma", false},
 	};
 
-	int currentCarIndex = 0;
-	int currentRepaierCarIndex = 0;
-
-	int limitCarsInGarage = 5;// Лимит машин в гараже
-
-	int countPassengerCar = 0;
-	int countCargoCar = 0;
+	for (int i = 0; i < carList.size(); ++i) {
+		std::cout << i+1 << ". " << carList[i].name << " (" 
+			<< (carList[i].isPassenger ? "Passenger" : "Cargo") << ") " << std::endl;
+	}
+	std::cout << std::endl;
 	
-	bool work = true;
-		
 	while (work) {
 		if (currentCarIndex < carList.size()) {
 			if (carList[currentCarIndex].isPassenger) {
 				serviceStation.AddCar(std::make_unique<PassengerCar>(carList[currentCarIndex].name));
 				countPassengerCar++;
-				std::cout << "add passenger" << std::endl;
 			}
-			else {
+			else if (!carList[currentCarIndex].isPassenger) {
 				serviceStation.AddCar(std::make_unique<CargoCar>(carList[currentCarIndex].name));
 				countCargoCar++;
-				std::cout << "add cargo" << std::endl;
 			}
 			currentCarIndex++;
 		}
 
-
 		if (currentRepaierCarIndex < carList.size()) {
-			serviceStation.RepairAll(currentRepaierCarIndex);
-			currentRepaierCarIndex++;
-			std::cout << "rep passendger" << std::endl;
-		}
-			
-	
+			if (((currentCarIndex - countPassengerCar) > limitCarsInGarage) || ((currentCarIndex - countCargoCar) > limitCarsInGarage)) {
+				serviceStation.RepairAll(currentRepaierCarIndex);
+				currentRepaierCarIndex++;
+			}
+		};
+
 		if (currentCarIndex >= carList.size() && currentRepaierCarIndex >= carList.size()) {
 			work = false;
 		}
-
-		std::cout << "Add: " << currentCarIndex << " repair: " << currentRepaierCarIndex << std::endl;
 	}
-		
+
 	serviceStation.DisplayGarage();
 
 	return 0;
