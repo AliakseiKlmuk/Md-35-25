@@ -1,11 +1,26 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "drawwidget.h"
+#include "databasemanager.h"
+#include "componentsdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow){
-    ui->setupUi(this);
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow)
+{
+      ui->setupUi(this);
+      setupToolBar();
 
-    setupToolBar();
+      _draw = new DrawWidget(ui->centralwidget);
+      auto* layout = ui->centralwidget->layout();
+      if(!layout){
+          layout = new QVBoxLayout(ui->centralwidget);
+      }
+      layout->addWidget(_draw);
+
+      m_db = new DatabaseManager(this);
+      m_db -> open("radio.db");
+      m_db -> initSchema();
 }
 
 MainWindow::~MainWindow(){
@@ -42,23 +57,30 @@ void MainWindow::setupToolBar(){
 
     QMenu *actionsMenu = new QMenu("Actions", this);
 
-    QAction *addButton = new QAction("Add Item", this);
-    QAction *removeButton = new QAction("Remove Item", this);
-    QAction *editButton = new QAction("Edit Item", this);
+    QAction *connectAction = new QAction("Connect", this);
+    QAction *addAction = new QAction("Add element", this);
+    QAction *undoAction = new QAction("Clear last", this);
+    QAction *clearAction = new QAction("Clear all", this);
 
-        connect(addButton, &QAction::triggered, [this](){
-            QMessageBox::information(this, "Action", "Add Item Trigered");
+    connect(connectAction, &QAction::triggered, [this](){
+        QMessageBox::information(this, "Action", "Connect");
         });
-        connect(removeButton, &QAction::triggered, [this](){
-            QMessageBox::information(this, "Action", "Remove Item Trigered");
+    connect(addAction, &QAction::triggered, this, [this](){
+        if (!m_db) return;
+        ComponentsDialog dlg(m_db, this);
+            dlg.exec();
         });
-        connect(editButton, &QAction::triggered, [this]() {
-            QMessageBox::information(this, "Action", "Edit Item Triggered");
-     });
+    connect(undoAction, &QAction::triggered, [this]() {
+            if(_draw) {_draw->undoLast();}
+        });
+    connect(clearAction, &QAction::triggered, [this]() {
+            if(_draw) {_draw->clearAll();}
+        });
 
-    actionsMenu->addAction(addButton);
-    actionsMenu->addAction(removeButton);
-    actionsMenu->addAction(editButton);
+    actionsMenu->addAction(connectAction);
+    actionsMenu->addAction(addAction);
+    actionsMenu->addAction(undoAction);
+    actionsMenu->addAction(clearAction);
 
     toolBar->addAction(actionsMenu->menuAction());
     toolBar->addSeparator();

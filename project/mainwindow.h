@@ -10,9 +10,13 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 
+#include "databasemanager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+class DrawWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -38,6 +42,14 @@ private:
     QToolButton *removeButton;  // Кнопка удалить
     QToolButton *editorButton;  // Кнопка для графического редактора
 
+private:
+    DrawWidget* _draw = nullptr;
+
+private:
+    DatabaseManager* m_db = nullptr;
+
 
 };
+
+
 #endif // MAINWINDOW_H

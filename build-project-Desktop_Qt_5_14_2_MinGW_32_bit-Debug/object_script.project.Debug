@@ -1,0 +1,10 @@
+debug/addcomponentdialog.o
+debug/componentsdialog.o
+debug/databasemanager.o
+debug/drawwidget.o
+debug/main.o
+debug/mainwindow.o
+debug/moc_addcomponentdialog.o
+debug/moc_componentsdialog.o
+debug/moc_databasemanager.o
+debug/moc_mainwindow.o

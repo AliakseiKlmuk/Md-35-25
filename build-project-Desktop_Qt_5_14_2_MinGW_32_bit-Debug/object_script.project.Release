@@ -1,0 +1,10 @@
+release/addcomponentdialog.o
+release/componentsdialog.o
+release/databasemanager.o
+release/drawwidget.o
+release/main.o
+release/mainwindow.o
+release/moc_addcomponentdialog.o
+release/moc_componentsdialog.o
+release/moc_databasemanager.o
+release/moc_mainwindow.o
