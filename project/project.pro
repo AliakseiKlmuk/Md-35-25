@@ -21,20 +21,27 @@ SOURCES += \
     componentsdialog.cpp \
     databasemanager.cpp \
     drawwidget.cpp \
+    footprintitem.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    pinitem.cpp \
+    placementscene.cpp
 
 HEADERS += \
+    PinInfo.h \
     addcomponentdialog.h \
     componentsdialog.h \
     databasemanager.h \
     drawwidget.h \
-    mainwindow.h
+    footprintitem.h \
+    mainwindow.h \
+    pinitem.h \
+    placementscene.h
 
 FORMS += \
-    addcomponentdialog.ui \
     componentsdialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    placementscene.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

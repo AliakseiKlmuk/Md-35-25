@@ -1,12 +1,8 @@
-#ifndef DRAWWIDGE_H
-#define DRAWWIDGE_H
+#ifndef DRAWWIDGET_H
+#define DRAWWIDGET_H
 
-#include <QMainWindow>
 #include <QWidget>
 #include <QPixmap>
-#include <QPoint>
-#include <QPainter>
-#include <QMouseEvent>
 #include <QVector>
 
 struct StrokeSeg{
@@ -22,30 +18,26 @@ class DrawWidget : public QWidget
 {
 public:
     explicit DrawWidget(QWidget* parent = nullptr);
-    QPoint clampToWidget(const QPoint& p, const QSize& s);
-
-public:
     void clearAll();
     void undoLast();
-    void addElement();
-    void connectFigures();
+    void setDrawingEnabled(bool enabled);
+
+public slots:
+    void addLine(QPointF a, QPointF b);
+    void finishStroke();
 
 protected:
     void paintEvent(QPaintEvent*) override;
-    void resizeEvent(QResizeEvent*) override;
-    void mousePressEvent(QMouseEvent*) override;
-    void mouseMoveEvent(QMouseEvent*) override;
-    void mouseReleaseEvent(QMouseEvent*) override;
+    void resizeEvent(QResizeEvent* e) override;
 
 private:
     QPixmap _canvas;
     QPixmap _drawingLayer;
-    QPoint _lastPoint;
-    bool _drawing = false;
 
-private:
     QVector<Stroke> _strokesHistory;
     Stroke _currentStroke;
+
+    bool m_drawingEnabled = true;
 };
 
-#endif // DRAWWIDGE_H
+#endif // DRAWWIDGET_H

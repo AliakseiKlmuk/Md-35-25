@@ -1,99 +1,70 @@
 #include "drawwidget.h"
-#include <algorithm>
-
-QPoint DrawWidget::clampToWidget(const QPoint& p, const QSize& s){
-    int x = std::min(std::max(p.x(), 0), s.width() - 1);
-    int y = std::min(std::max(p.y(), 0), s.height() - 1);
-    return QPoint(x, y);
-}
+#include <QPainter>
+#include <QResizeEvent>
 
 DrawWidget::DrawWidget(QWidget* parent) : QWidget(parent)
 {
 setMinimumSize(800, 600);
-_canvas = QPixmap(size());
-_canvas.fill(Qt::white);
+
+QImage img(size(), QImage::Format_ARGB32);
+img.fill(Qt::transparent);
+_canvas = QPixmap::fromImage(img);
+
+QImage img2(size(), QImage::Format_ARGB32);
+img2.fill(Qt::transparent);
+_drawingLayer = QPixmap::fromImage(img2);
 }
 
-void DrawWidget::resizeEvent(QResizeEvent *){
-    if (_canvas.isNull()){         // фон
-        _canvas = QPixmap(size());
-        _canvas.fill(Qt::white);
-    } else {
-        QPixmap newCanvas(size());
-        newCanvas.fill(Qt::white);
+void DrawWidget::resizeEvent(QResizeEvent *e){
+    QSize s = e->size();
 
+    QImage img(s, QImage::Format_ARGB32);
+    img.fill(Qt::transparent);
+    QPixmap newCanvas = QPixmap::fromImage(img);
+
+    if(!_canvas.isNull()){
         QPainter p(&newCanvas);
         p.drawPixmap(0, 0, _canvas);
-
-        _canvas = std::move(newCanvas);
     }
 
-    //if (_drawingLayer.isNull()){         // слой рисунка
-        _drawingLayer = QPixmap(size());
-        _drawingLayer.fill(Qt::transparent);
-   // } else {
-       // QPixmap newDrawingLayer(size());
-       // newDrawingLayer.fill(Qt::white);
+    _canvas = newCanvas;
 
-       // QPainter p(&newDrawingLayer);
-       // p.drawPixmap(0, 0, _drawingLayer);
+    QImage img2(s, QImage::Format_ARGB32);
+    img2.fill(Qt::transparent);
+    _drawingLayer = QPixmap::fromImage(img2);
 
-       // _canvas = std::move(newDrawingLayer);
-   // }
-
-    _lastPoint = QPoint();
-    _drawing = false;
     update();
 }
 
-void DrawWidget::paintEvent(QPaintEvent *){
+void DrawWidget::paintEvent(QPaintEvent*){
     QPainter p(this);
     p.drawPixmap(0, 0, _canvas);
     p.drawPixmap(0, 0, _drawingLayer);
 }
 
-void DrawWidget::mousePressEvent(QMouseEvent *e){
-    if (e->button() == Qt::LeftButton){
-        _lastPoint = DrawWidget::clampToWidget(e->pos(), size());
-        _drawing = true;
-
-        _currentStroke.segs.clear();
-    }
-}
-
-void DrawWidget::mouseMoveEvent(QMouseEvent *e){
-    if (!_drawing || !(e->buttons() & Qt::LeftButton)) {return;}
-
-    QPoint cur = DrawWidget::clampToWidget(e->pos(), size());
+void DrawWidget::addLine(QPointF a, QPointF b){
+    if(!m_drawingEnabled) {return;};
 
     QPainter p(&_drawingLayer);
     p.setRenderHint(QPainter::Antialiasing, true);
     p.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    p.drawLine(_lastPoint, cur);
+    p.drawLine(a, b);
 
-    _currentStroke.segs.push_back({_lastPoint, cur});
-    _lastPoint = cur;
-
+    _currentStroke.segs.push_back({a.toPoint(), b.toPoint()});
     update();
 }
 
-void DrawWidget::mouseReleaseEvent(QMouseEvent *event){
-    if(event->button() == Qt::LeftButton){
-        _drawing = false;
+void DrawWidget::finishStroke(){
+    if(!_currentStroke.segs.isEmpty()){ _strokesHistory.push_back(_currentStroke);}
 
-        if (!_currentStroke.segs.isEmpty()){
-            _strokesHistory.push_back(_currentStroke);
-        }
-    }
+    _currentStroke.segs.clear();
 }
 
 void DrawWidget::clearAll(){
-
-    if(_drawingLayer.isNull()) {return;}
     _drawingLayer.fill(Qt::transparent);
-    _lastPoint = QPoint();
-    _drawing = false;
-
+    _canvas.fill(Qt::transparent);
+    _strokesHistory.clear();
+    _currentStroke.segs.clear();
     update();
 }
 
@@ -106,7 +77,7 @@ void DrawWidget::undoLast(){
 
     QPainter p(&_drawingLayer);
     p.setRenderHint(QPainter::Antialiasing, true);
-    p.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    p.setPen(QPen(Qt::black, 2));
 
     for (const auto& stroke : _strokesHistory){
         for(const auto& seg : stroke.segs){
@@ -114,8 +85,10 @@ void DrawWidget::undoLast(){
         }
      }
 
-    _lastPoint = QPoint();
-    _drawing = false;
-
     update();
 }
+
+void DrawWidget::setDrawingEnabled(bool enabled){
+    m_drawingEnabled = enabled;
+}
+

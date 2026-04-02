@@ -10,6 +10,8 @@
 #include <QVariant>
 #include <QVector>
 
+#include "PinInfo.h"
+
 struct ComponentRow {
     int component_id;
     QString visible_name;
@@ -37,6 +39,14 @@ public:
 
 public:
     bool addComponent(const ComponentRow& r);
+
+public:
+    bool updatePlacedElementPosition(int placedElementId, int newX, int newY, double newRotation);
+    bool recalcPlacedPinsForElement(int placedElementId);
+
+public:
+    QVector<PinInfo> loadFootprintPins(const QString& footprintId);
+    void insertTestFootprintPins();
 
 private:
     QSqlDatabase m_db;

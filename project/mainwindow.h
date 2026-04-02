@@ -9,7 +9,11 @@
 #include <QWidget>
 #include <QToolButton>
 #include <QHBoxLayout>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
 
+#include "placementscene.h"
 #include "databasemanager.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +34,9 @@ public:
     void setupToolBar();
     void setupButtonPanel();
 
+public:
+    void onFootprintHover(bool inside);
+
 private:
     Ui::MainWindow *ui;
 
@@ -47,6 +54,8 @@ private:
 
 private:
     DatabaseManager* m_db = nullptr;
+
+    PlacementScene* m_scene;
 
 
 };

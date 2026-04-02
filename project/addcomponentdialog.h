@@ -27,8 +27,6 @@ private:
     Ui::AddComponentDialog *ui;
     DatabaseManager* m_db = nullptr;
     bool m_ok = false;
-
-
 };
 
 #endif // ADDCOMPONENTDIALOG_H

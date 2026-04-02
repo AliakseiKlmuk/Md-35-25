@@ -16,18 +16,19 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
-#include <QtWidgets/QWidget>
+#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_ComponentsDialog
 {
 public:
+    QVBoxLayout *verticalLayout;
     QTableWidget *tableWidget;
-    QWidget *widget;
     QHBoxLayout *horizontalLayout;
     QPushButton *refreshButton;
     QPushButton *removeButton;
+    QPushButton *addToSceneButton;
     QPushButton *addButton;
 
     void setupUi(QDialog *ComponentsDialog)
@@ -35,29 +36,37 @@ public:
         if (ComponentsDialog->objectName().isEmpty())
             ComponentsDialog->setObjectName(QString::fromUtf8("ComponentsDialog"));
         ComponentsDialog->resize(400, 300);
+        verticalLayout = new QVBoxLayout(ComponentsDialog);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         tableWidget = new QTableWidget(ComponentsDialog);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(5, 11, 391, 211));
-        widget = new QWidget(ComponentsDialog);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(80, 240, 254, 24));
-        horizontalLayout = new QHBoxLayout(widget);
+
+        verticalLayout->addWidget(tableWidget);
+
+        horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        refreshButton = new QPushButton(widget);
+        refreshButton = new QPushButton(ComponentsDialog);
         refreshButton->setObjectName(QString::fromUtf8("refreshButton"));
 
         horizontalLayout->addWidget(refreshButton);
 
-        removeButton = new QPushButton(widget);
+        removeButton = new QPushButton(ComponentsDialog);
         removeButton->setObjectName(QString::fromUtf8("removeButton"));
 
         horizontalLayout->addWidget(removeButton);
 
-        addButton = new QPushButton(widget);
+        addToSceneButton = new QPushButton(ComponentsDialog);
+        addToSceneButton->setObjectName(QString::fromUtf8("addToSceneButton"));
+
+        horizontalLayout->addWidget(addToSceneButton);
+
+        addButton = new QPushButton(ComponentsDialog);
         addButton->setObjectName(QString::fromUtf8("addButton"));
 
         horizontalLayout->addWidget(addButton);
+
+
+        verticalLayout->addLayout(horizontalLayout);
 
 
         retranslateUi(ComponentsDialog);
@@ -70,7 +79,8 @@ public:
         ComponentsDialog->setWindowTitle(QCoreApplication::translate("ComponentsDialog", "Dialog", nullptr));
         refreshButton->setText(QCoreApplication::translate("ComponentsDialog", "Refresh", nullptr));
         removeButton->setText(QCoreApplication::translate("ComponentsDialog", "Remove", nullptr));
-        addButton->setText(QCoreApplication::translate("ComponentsDialog", "Add", nullptr));
+        addToSceneButton->setText(QCoreApplication::translate("ComponentsDialog", "Add to screen", nullptr));
+        addButton->setText(QCoreApplication::translate("ComponentsDialog", "Add ot memory", nullptr));
     } // retranslateUi
 
 };
