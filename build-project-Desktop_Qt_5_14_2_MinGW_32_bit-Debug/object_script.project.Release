@@ -1,0 +1,15 @@
+release/addcomponentdialog.o
+release/componentsdialog.o
+release/databasemanager.o
+release/drawwidget.o
+release/footprintitem.o
+release/main.o
+release/mainwindow.o
+release/pinitem.o
+release/placementscene.o
+release/moc_addcomponentdialog.o
+release/moc_componentsdialog.o
+release/moc_databasemanager.o
+release/moc_footprintitem.o
+release/moc_mainwindow.o
+release/moc_placementscene.o

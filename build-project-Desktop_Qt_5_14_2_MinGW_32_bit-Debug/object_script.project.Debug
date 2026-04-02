@@ -1,0 +1,15 @@
+debug/addcomponentdialog.o
+debug/componentsdialog.o
+debug/databasemanager.o
+debug/drawwidget.o
+debug/footprintitem.o
+debug/main.o
+debug/mainwindow.o
+debug/pinitem.o
+debug/placementscene.o
+debug/moc_addcomponentdialog.o
+debug/moc_componentsdialog.o
+debug/moc_databasemanager.o
+debug/moc_footprintitem.o
+debug/moc_mainwindow.o
+debug/moc_placementscene.o
